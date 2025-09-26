@@ -203,7 +203,7 @@ function App() {
         title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       >
         <span className="theme-icon">
-          {theme === 'light' ? '🌙' : '☀️'}
+          {theme === 'light' ? '+++++' : '****'}
         </span>
       </button>
 
