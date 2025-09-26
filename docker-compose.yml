@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Development service (frontend only)
+  react-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - app-network
+    profiles:
+      - dev
+
+  # Production service (frontend only)
+  react-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+    profiles:
+      - prod
+
+networks:
+  app-network:
+    driver: bridge
