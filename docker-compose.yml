@@ -20,6 +20,7 @@ services:
 
   # Production service (frontend only)
   react-prod:
+    container_name: react-prod
     build:
       context: .
       dockerfile: Dockerfile
