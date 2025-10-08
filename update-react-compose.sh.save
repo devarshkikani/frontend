@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Exit immediately if a command fails
+set -e
+
+# -------------------------
+# Config
+# -------------------------
+PROJECT_DIR="/Users/sachin/Documents/SSH_WEB/form-web-application/frontend"
+SERVICE_NAME="react-prod"
+IMAGE_NAME="form-web-frontend"
+BACKUP_DIR="$PROJECT_DIR/backups"
+TIMESTAMP=$(date +%Y%m%d%H%M%S)
+
+echo "🔄 Starting Docker Compose updater with backup for React app..."
+
+# -------------------------
+# Step 1: Pull latest code
+# -------------------------
+cd "$PROJECT_DIR"
+echo "📥 Pulling latest code..."
+git fetch --all
+git reset --hard origin/main
+
+# -------------------------
+# Step 2: Backup current container/image
+# -------------------------
+echo "💾 Backing up current container/image..."
+
+mkdir -p "$BACKUP_DIR"
+
+if docker ps -q -f name=$SERVICE_NAME > /dev/null; then
+    echo "🛑 Stopping current container..."
+    docker stop $SERVICE_NAME
+fi
+
+if docker images | grep -q "$IMAGE_NAME"; then
+    docker commit $SERVICE_NAME "${IMAGE_NAME}:backup-$TIMESTAMP" || true
+    docker save -o "$BACKUP_DIR/${IMAGE_NAME}_backup_$TIMESTAMP.tar" "${IMAGE_NAME}:backup-$TIMESTAMP" || true
+    echo "✅ Backup saved at $BACKUP_DIR/${I
